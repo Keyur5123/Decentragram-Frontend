@@ -1,0 +1,60 @@
+.Post__Likes {
+    margin-top: -8px !important;
+    padding-left: 5px;
+    /* background-color: aqua; */
+}
+
+@media only screen and (min-width: 500px) {
+    .profile__Header {
+        display: flex;
+    }
+
+    .user__name, .user__totalPosts {
+        margin-left: 3rem !important;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .profile__Header, .user__totalPosts {
+        text-align: center;
+        justify-content: center;
+        margin-left: 0px;
+    }
+
+    .profile__Header h3 {
+        margin-bottom: 0px;
+    }
+
+    .user__name {
+        margin-top: 1rem;
+    }
+}
+
+ .person .user .status {
+    width: 10px;
+    height: 10px;
+    /* -webkit-border-radius: 100px;
+    -moz-border-radius: 100px; */
+    border-radius: 100px;
+    background: #e6ecf3;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  
+   .person .user .status.online {
+    background: #c5f565;
+    /* background: #9ec94a; */
+  }
+  
+ .person .user .status.offline {
+    background: #c4d2e2;
+  }
+  
+  .users .person .user .status.away {
+    background: #f9be52;
+  }
+  
+  .users .person .user .status.busy {
+    background: #fd7274;
+  }

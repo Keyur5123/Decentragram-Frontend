@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function ReceverText(props) {
@@ -6,37 +6,36 @@ export default function ReceverText(props) {
   const [unsetButton, setUnsetButton] = useState(false)
   var users = props.users;
   var receverMessageObj = props.receverMessageObj;
-  console.log("[RecevText.js]receverMessageObj", users);
+
+  // console.log("[RecevText.js]receverMessageObj", users);
+  
   var senderUser = users.filter((user) => {
     return user._id === receverMessageObj?.senderId;
   });
 
-  function handlerMouseOver() {
-    setUnsetButton(!unsetButton)
-  }
-  function unSendMessage() {
-    console.log('unsendMessage', receverMessageObj._id)
-    axios.post(
-      "http://localhost:5000/allUser/unsend",
-      { id: receverMessageObj._id }
-      ,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        }
-      }
-      , (err, result) => {
-        if (result) {
+  // function unSendMessage() {
+  //   console.log('unsendMessage', receverMessageObj._id)
+  //   axios.post(
+  //     "http://localhost:5000/allUser/unsend",
+  //     { id: receverMessageObj._id }
+  //     ,
+  //     {
+  //       headers: {
+  //         Authorization: "Bearer " + token,
+  //       }
+  //     }
+  //     , (err, result) => {
+  //       if (result) {
 
-          // console.log("[reseveMessage.js]unsend", result);
-        }
-        if (err) {
-          console.log("[chat.ja,socket-data]recevMessage error", err);
-          // toast.error(data.data.message);
-        }
-      });
-    props.messageObjsGET()
-  }
+  //         // console.log("[reseveMessage.js]unsend", result);
+  //       }
+  //       if (err) {
+  //         console.log("[chat.ja,socket-data]recevMessage error", err);
+  //         // toast.error(data.data.message);
+  //       }
+  //     });
+  //   props.messageObjsGET()
+  // }
 
   // console.log("[RecevText.js]senderUser", senderUser);
   return (
@@ -44,17 +43,15 @@ export default function ReceverText(props) {
       <li className="chat-left">
         <div className="chat-avatar">
           <img
-            src={`http://localhost:5000/${senderUser[0].image}`}
+            src={`http://localhost:5000/${senderUser[0]?.image}`}
             alt="Retail Admin"
           />
 
-          <div className="chat-name">{senderUser[0].userName}</div>
+          <div className="chat-name">{senderUser[0]?.userName}</div>
         </div>
-        <div className="chat-text displaflex" onMouseEnter={() => handlerMouseOver()} onMouseLeave={() => handlerMouseOver()}>
-          {/* Hello, I'm Russell.
-          <br /> */}
-          {receverMessageObj.text ? receverMessageObj.text : receverMessageObj.Text}
-          {unsetButton ? <>
+        <div className="chat-text displaflex" onMouseEnter={() => setUnsetButton(!unsetButton)} onMouseLeave={() => setUnsetButton(!unsetButton)}>
+          {receverMessageObj?.text ? receverMessageObj?.text : receverMessageObj?.Text}
+          {/* {unsetButton ? <>
             <div className="dropdown" style={{ marginLeft: "auto" }}>
               <button
                 className="btn  dropdown-toggle"
@@ -73,8 +70,9 @@ export default function ReceverText(props) {
                 </div>
               </div>
             </div>
-          </> : null}
+          </> : null} */}
         </div>
+        
         {/* <div className="chat-hour">
           08:55 <span className="fa fa-check-circle"></span>
         </div> */}

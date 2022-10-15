@@ -2,12 +2,13 @@ import React from "react";
 import Header from "../components/navbar/Header";
 // import Home from "../components/home/Home";
 import Addpost from "../components/addpost/Addpost";
-import Mypost from "../components/mypost/Mypost1";
+import Mypost from "../components/mypost/Mypost";
 import Profile from "../components/profile/Profile";
 import Login from "../components/login/Login";
-import Register from "../components/register/Register1";
+import Register from "../components/register/Register";
 import NF from "../components/notfountpage/Notfountpage";
-import Chat from "../components/chat/Chat";
+import Chat from "../components/chat/NewChatComponents/Chat";
+// import Chat from "../components/chat/Chat"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // import { Route, Switch } from "react-router-dom";
@@ -24,6 +25,7 @@ function Content() {
         <Routes>
           {lToken ? (
             <>
+              <Route path="/" exact element={<Addpost />} />
               <Route path="/AddPost" exact element={<Addpost />} />
               <Route path="/Chat" exact element={<Chat />} />
               <Route path="/MyPost" exact element={<Mypost />} />

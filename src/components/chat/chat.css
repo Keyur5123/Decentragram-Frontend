@@ -1,6 +1,6 @@
-body {
-  margin-top: 20px;
-}
+/* body { */
+  /* margin-top: 20px;
+} */
 /*************** 1.Variables ***************/
 
 /* ------------------ Color Pallet ------------------ */
@@ -387,6 +387,7 @@ ul {
 }
 .chatBox{height: 456px !important;
   overflow: scroll;
+  overflow-x: auto;
 }  
 .displaflex{
     display: flex;

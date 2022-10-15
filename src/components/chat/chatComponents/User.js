@@ -5,8 +5,6 @@ export default function User(props) {
   const profileImg = userData.image;
   const userName = userData.userName;
   const activeUser = props.activeUsers?.filter((user) => {
-    // console.log("user", user.userId);
-    // console.log("userData", userData._id);
     return user.userId === userData._id;
   });
   return (

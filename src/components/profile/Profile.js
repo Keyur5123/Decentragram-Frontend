@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Container } from "@material-ui/core";
+import { Button, Form, ToastHeader } from "react-bootstrap";
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import DatePicker from 'react-date-picker';
 
 function Profile() {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
-  const [image, setImage] = useState();
+  const [profileimage, setProfileImage] = useState();
   const [proFilePath, setProFilePath] = useState();
+  const [total_Post, setTotal_Post] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState();
+  const [birthDate, setBirthDate] = useState(new Date().toLocaleString());
 
   useEffect(() => {
     getUserData();
@@ -21,135 +29,114 @@ function Profile() {
     });
     apiData
       .then((value) => {
-        var dbObj = value.data.data;
-        var dbuserName = dbObj.userName;
-        setName(dbuserName);
-        var dbuserEmail = dbObj.email;
-        setEmail(dbuserEmail);
-        var dbuserProImg = dbObj.image;
-        setProFilePath(dbuserProImg);
+        console.log("value.data.data :_ ", value.data.data);
+        var dbObj = value?.data?.data;
+        setName(dbObj?.userName);
+        setEmail(dbObj?.email);
+        setProFilePath(dbObj?.image);
+        setPhoneNumber(dbObj?.phone_number)
+        setBirthDate(dbObj?.birthDate)
+        setTotal_Post(value?.data?.total_Post)
       })
       .catch((err) => {
-        console.log("get userdata error </br>" + err);
+        toast.error(err)
       });
   };
 
-  const handlerChange = (e) => {
-    if (e.target.name === `name`) {
-      setName(e.target.value);
-    }
-    if (e.target.name === `email`) {
-      // console.log(e.target.value);
-      setEmail(e.target.value);
-    }
-    if (e.target.name === `image`) {
-      setImage(e.target.files[0]);
-    }
-    console.log(e.target.files[0]);
-  };
-  
   const handlersubmit = (e) => {
     e.preventDefault();
-    let formdata = new FormData();
     var token = localStorage.getItem("token");
-    formdata.append("name", name);
-    formdata.append("email", email);
-    formdata.append("image", image);
+    try {
 
-    axios
-      .post("http://localhost:5000/profile", formdata, {
+      let formdata = new FormData();
 
+      formdata.append("name", name);
+      formdata.append("email", email);
+      formdata.append("image", profileimage);
+      formdata.append("birthDate", JSON.stringify(birthDate));
+
+      axios.post("http://localhost:5000/profile", formdata, {
         headers: {
           Authorization: "Bearer " + token,
         },
       })
-      .then(function (response) {
-        if (response.data.error) {
-          console.log("response.data.error", response);
-          toast.error(response.data.error);
-        }
-        if (response.data.data) {
-          toast.info("update succesfuly");
-          getUserData();
-        }
-      })
-      .catch(function (error) {
-        console.log("error", error);
-        // toast.error(error.massege);
-      });
+        .then(function (response) {
+          if (response.data.error) {
+            toast.error(response.data.error);
+          }
+          if (response.data.data) {
+            console.log("formdata :- ", response.data.data);
+            toast.info("update succesfuly");
+            getUserData();
+          }
+        })
+        .catch(function (error) {
+          toast.error(error.massege);
+        });
+
+      if (phoneNumber.charAt(3) === '8' || phoneNumber.charAt(3) === '9' ||
+        phoneNumber.charAt(3) === '5' || phoneNumber.charAt(3) === '6') {
+        formdata.append("phoneNumber", phoneNumber);
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+
   };
 
   return (
     <>
-      <div className="container">
-        <div className="card" style={{ width: "auto" }}>
-          <div className="card-body">
-            <div className="container mb-3">
-
-              <div style={{ width: "300px" }}>
-                <img
-                  src={`http://localhost:5000/${proFilePath}`}
-                  className="img-thumbnail"
-                  alt="profile_image "
-                />
-              </div>
-
-              <br />
-
-              <form className="profile" onSubmit={(e) => handlersubmit(e) }>
-                
-                <div className="form-floating mb-3">
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="floatingInput"
-                    name="image"
-                    placeholder="image"
-                    onChange={(e) => {
-                      handlerChange(e);
-                    }}
-                  />
-                </div>
-
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingInput"
-                    name="name"
-                    placeholder="Name"
-                    value={name}
-                    onChange={(e) => {
-                      handlerChange(e);
-                    }}
-                  />
-                </div>
-
-                <div className=" form-floating mb-3">
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="floatingInput"
-                    name="email"
-                    value={email}
-                    placeholder="Email address"
-                    onChange={(e) => {
-                      handlerChange(e);
-                    }}
-                  />
-                </div>
-
-                <div className="form-floating mb-3">
-                  <button type="submit" className="btn btn-primary">
-                    update
-                  </button>
-                </div>
-
-              </form>
-            </div>
+      <Container>
+        <div className="mt-3 profile__Header align-items-center justify-content-center">
+          <img
+            src={`http://localhost:5000/${proFilePath}`}
+            className='img-fluid rounded-circle'
+            alt="profile_image "
+            width="193"
+          // height="130"
+          />
+          <div>
+            <h3 className="user__name">{name}</h3>
+            <span className="d-flex user__totalPosts"><h6 className="mr-2 mt-1">{total_Post.length}</h6> posts</span>
           </div>
         </div>
-      </div>
+
+        <div>
+          <Form className="mt-3" onSubmit={handlersubmit}>
+
+            <Form.Group controlId="formFile" className="mb-3">
+              <Form.Label>Choose photo to be set as Profile...</Form.Label>
+              <Form.Control type="file" placeholder='Choose 1 pic at a time...' onChange={e => setProfileImage(e.target.files[0])} />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicName">
+              <Form.Label>Enter Name</Form.Label>
+              <Form.Control type="text" placeholder="Enter name" value={name} onChange={e => setName(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Email Email</Form.Label>
+              <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
+            </Form.Group>
+
+            <PhoneInput
+              onlyCountries={['in']}
+              country={'in'}
+              value={phoneNumber}
+              className="mb-4 mt-4"
+              onChange={phone => setPhoneNumber('+' + phone)}
+            />
+            <div className="d-flex">
+              <DatePicker className="mb-4" onChange={setBirthDate} />
+              {birthDate && <p className="ml-3">The Birthdate is :- {birthDate?.split(' ')?.slice(1, 4)?.join(' ')}</p>}
+            </div>
+            <br />
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </div>
+      </Container>
     </>
   );
 }

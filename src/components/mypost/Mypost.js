@@ -1,153 +1,110 @@
-import React, { useState, useEffect } from "react";
-import Post from "./Post";
+import React, { useEffect, useState } from 'react';
+import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import Axios from "axios";
-import { toast } from "react-toastify";
-function Mypost() {
-  const [mypostimg, setMypostImg] = useState();
-  const [posttitle, setPostTitle] = useState();
-  const [dbmyposts, setDbMyPost] = useState([]);
+import { toast } from 'react-toastify';
+import Post from './Post';
+import RecipeReviewCard from "./Post"
 
-  useEffect(() => {
-    mypostData();
-  }, []);
+function MyPost(props) {
 
-  function mypostData() {
-    
-    var token = localStorage.getItem("token");
-    var getmypost = Axios.get("http://localhost:5000/mypost/", {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
 
-    getmypost
-      .then((data) => {
-        console.log("postData", data.data.data);
-        let dbPost = data.data.data;
-        setDbMyPost(dbPost);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+    const [myPostImg, setMyPostImg] = useState()
+    const [postTitle, setPostTitle] = useState()
+    const [postCaption, setPostCaption] = useState()
+    const [myAllPosts, setMyAllPosts] = useState([])    
 
-  const handlerImage = (e) => {
-    console.log("<<<<<>>>>>>>>>",e.target.files);
-    setMypostImg(e.target.files[0]);
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        var token = localStorage.getItem("token");
 
-  const handlerChange = (e) => {
-    // console.log(e.target.value);
-    setPostTitle(e.target.value);
-  };
-  
-  const handlersubmitimg = async (e) => {
-    e.preventDefault();
+        let formdata = new FormData();
+        formdata.append("image", myPostImg);
+        formdata.append("mptitle", postTitle);
+        formdata.append("mpcaption", postCaption);
 
-    var formdata = new FormData();
-    formdata.append("image", mypostimg);
-    formdata.append("mptitle", posttitle);
-    var token = localStorage.getItem("token");
-    // console.log("ckdmvlkndfvjk fdkvmd");
+        await Axios.post("http://localhost:5000/mypost/", formdata, {
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        })
+            .then(res => {
+                try {
+                    toast.info(res?.data?.message);
+                    setPostTitle('')
+                    setPostCaption('')
+                    setMyPostImg('')
+                    getMyAllPostData();
+                } catch (err) {
+                    toast.error(res?.data?.error)
+                }
+            })
+            .catch(err => toast.error(err))
+    }
 
-    const mypost = Axios.post("http://localhost:5000/mypost/", formdata, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
-    mypost
-      .then((data) => {
-        if (data) {
-          toast.info(data.data.message);
-          // console.log(data.data.message);
-          // console.log(data.data);
-          // setMypostImg("");
-          setPostTitle("");
-          mypostData();
-        }
-      })
-      .catch((err) => {
-        if (err) {
-          console.log("err from mypost", err);
-          // toast.error(data.data.message);
-        }
-      });
-  };
-  // console.log("post id from mypoodt", postImgId );
-  // console.log("post id from mypoodt", dbmyposts );
-  const postIten = dbmyposts?.map((dbmypost, index) => (
-    <Post
-      key={index}
-      dbMypost={dbmypost}
-      mypostdata={mypostData}
-      delete={true}
-    />
-  ));
+    const getMyAllPostData = async () => {
+        const token = localStorage.getItem("token");
+        await Axios.get("http://localhost:5000/mypost/", {
+            headers: {
+                Authorization: "Bearer " + token,
+            }
+        })
+            .then(res => setMyAllPosts(res.data.data))
+            .catch(err => toast.error("Something went wrong!..."))
+    }
 
-  return (
-    <>
-      <div className="container">
-        <div className="card" style={{ width: "auto" }}>
-          <div className="card-body">
-            <div className="container mb-3">
-              <br />
-              <h1>Add Post</h1>
-              <form
-                className="profile"
-                onSubmit={(e) => {
-                  handlersubmitimg(e);
-                }}
-              >
-                <div className="form-floating mb-3">
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="floatingInput"
-                    name="image"
-                    // value={mypostimg}
-                    placeholder="image"
-                    onChange={(e) => {
-                      handlerImage(e);
-                    }}
-                  />
-                </div>
+    useEffect(() => {
+        getMyAllPostData()
+    }, [])
 
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="title"
-                    value={posttitle}
-                    name="title"
-                    placeholder="titles"
-                    onChange={(e) => {
-                      handlerChange(e);
-                    }}
-                  />
-                </div>
+    const displayMyAllPosts = myAllPosts?.map((dbmypost, index) => (
+        <Col xs={12} md={4} lg={3}>
+            <Post
+                key={index}
+                dbMypost={dbmypost}
+                mypostdata={getMyAllPostData}
+                delete={true}
+            />
+            {/* <RecipeReviewCard
+                key={index}
+                dbMypost={dbmypost}
+                mypostdata={getMyAllPostData}
+                delete={true}
+            /> */}
+        </Col>
+    ))
 
-                <div className="form-floating mb-3">
-                  <button type="submit" className="btn btn-primary">
-                    submit
-                  </button>
-                </div>
-
-              </form>
-
-              <div className="container mb-3" style={{ width: "auto" }}>
-                <h1>My Post</h1>
+    return (
+        <>
+            <Container>
                 <div>
-                  {/* {console.log("ddd", postIten)} */}
-                  {postIten}
+                    <h1 className='text-center'>Add Post</h1>
+                    <Form onSubmit={handleSubmit}>
+                        <Form.Group controlId="formFile" className="mb-3">
+                            <Form.Label>Choose photo to be upload</Form.Label>
+                            <Form.Control type="file" placeholder='Choose 1 pic at a time...' onChange={e => setMyPostImg(e.target.files[0])} required />
+                        </Form.Group>
+                        <Form.Group controlId="formPostTitle" className="mb-3">
+                            <Form.Label>Enter Post Title</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Title" value={postTitle} onChange={e => setPostTitle(e.target.value)} required />
+                        </Form.Group>
+                        <Form.Group controlId="formPostCaption" className="mb-3">
+                            <Form.Label>Enter Post caption</Form.Label>
+                            <Form.Control type="text" placeholder="Enter a caption" value={postCaption} onChange={e => setPostCaption(e.target.value)} required />
+                        </Form.Group>
+                        <Button className='mt-3' variant="primary" type="submit">
+                            Submit
+                        </Button>
+                    </Form>
                 </div>
-              </div>
+                <div className='mt-3'>
+                    <Row>
+                        {displayMyAllPosts}
+                    </Row>
+                </div>
 
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+            </Container>
+        </>
+    );
 }
 
-export default Mypost;
+export default MyPost;

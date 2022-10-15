@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import Post from "../mypost/Post";
+import { Container } from "@material-ui/core";
+import { Col, Row } from "react-bootstrap";
+import { toast } from "react-toastify";
 function Addpost() {
   const [dbmyposts, setDbMyPost] = useState([]);
 
   useEffect(() => {
     mypostData();
   }, []);
+
   function mypostData() {
     var token = localStorage.getItem("token");
     var getmypost = Axios.get("http://localhost:5000/allpost", {
@@ -17,9 +21,13 @@ function Addpost() {
 
     getmypost
       .then((data) => {
-        // console.log("Add post", data.data.data);
-        let dbPost = data?.data?.data;
-        setDbMyPost(dbPost);
+        if(data?.data?.data){
+          let dbPost = data?.data?.data;
+          setDbMyPost(dbPost);
+        }
+        else{
+          toast.error(data?.data?.message ?? "Couldn't load data from the server")
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -27,26 +35,24 @@ function Addpost() {
   }
 
   const allItem = dbmyposts?.map((dbmypost, index) => (
-    <Post
-      key={index}
-      dbMypost={dbmypost}
-      mypostdata={mypostData}
-      delete={false}
-    />
+    <Col xs={12} md={4} lg={3}>
+      <Post
+        key={index}
+        dbMypost={dbmypost}
+        mypostdata={mypostData}
+        delete={false}
+      />
+    </Col>
   ));
   return (
     <>
-      <div className="container">
-        <div className="card" style={{ width: "auto" }}>
-          <div className="card-body">
-            <div className="container mb-3">
-              <div className="container mb-3" style={{ width: "auto" }}>
-                <h1>All Post</h1>
-                <div>{allItem}</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <h1 className="mt-4 text-center mb-3">All Post</h1>
+      <div>
+        <Container>
+          <Row>
+            {allItem}
+          </Row>
+        </Container>
       </div>
     </>
   );

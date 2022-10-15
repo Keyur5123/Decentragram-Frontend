@@ -102,18 +102,18 @@ function Header() {
                 height="30"
                 className="d-inline-block align-top"
               />{' '}
-              DecentMediaApp
+              Decentragram  
             </Navbar.Brand>
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-            <Navbar.Collapse id="basic-navbar-nav text-center" className='nav__header'>
-              <Nav className="ml-auto nav__header">
+            <Navbar.Collapse id="basic-navbar-nav " className='nav__header'>
+              <Nav className="ml-auto nav__header  text-center">
                 {token ?
                   <>
                     <Nav.Item>
-                      <LinkContainer to="/AddPost">
-                        <Nav.Link>AddPost</Nav.Link>
+                      <LinkContainer className="text-center" to="/AddPost">
+                        <Nav.Link eventKey="link-0">AddPost</Nav.Link>
                       </LinkContainer>
                     </Nav.Item>
                     <Nav.Item>
@@ -128,12 +128,12 @@ function Header() {
                     </Nav.Item>
                     <Nav.Item>
                       <LinkContainer to="/profile">
-                        <Nav.Link eventKey="link-3">profile</Nav.Link>
+                        <Nav.Link eventKey="link-3">Profile</Nav.Link>
                       </LinkContainer>
                     </Nav.Item>
                     <Nav.Item>
                       {/* <LinkContainer to="/logout"> */}
-                      <Nav.Link eventKey="link-4" onClick={handlerUser}>logout</Nav.Link>
+                      <Nav.Link eventKey="link-4" onClick={handlerUser}>Logout</Nav.Link>
                       {/* </LinkContainer> */}
                     </Nav.Item>
                   </>
@@ -141,7 +141,7 @@ function Header() {
                   <>
                     <Nav.Item>
                       <LinkContainer to="/">
-                        <Nav.Link eventKey="link-5">login</Nav.Link>
+                        <Nav.Link eventKey="link-5">Login</Nav.Link>
                       </LinkContainer>
                     </Nav.Item>
                     <Nav.Item>

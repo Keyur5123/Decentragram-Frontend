@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./chat.css";
 import Axios from "axios";
-import Search from "./chatComponents/Search";
-import User from "./chatComponents/User";
+import Search from "./Search";
+import User from "./User";
 import io from "socket.io-client";
-import ChatBox from "./chatComponents/chatBox/ChatBox";
+import ChatBox from "./chatBox/ChatBox";
 import ChatBoxDefault from "./chatComponents/chatBox/ChatBoxDefault";
 const ENDPOINT = "localhost:5000";
 
@@ -112,6 +112,7 @@ export default function Chat() {
 
     });
   }, [])
+  
   function searchUser(searchUserObj) {
     setSearchUsers(searchUserObj)
   }
