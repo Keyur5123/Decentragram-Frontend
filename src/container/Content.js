@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "../components/navbar/Header";
-// import Home from "../components/home/Home";
-import Addpost from "../components/addpost/Addpost";
+import Home from "../components/home/Home"
 import Mypost from "../components/mypost/Mypost";
 import Profile from "../components/profile/Profile";
 import Login from "../components/login/Login";
@@ -14,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import { Route, Switch } from "react-router-dom";
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CommentModel from "../components/mypost/CommentModel";
 
 function Content() {
   const lToken = localStorage.getItem("token");
@@ -25,12 +25,12 @@ function Content() {
         <Routes>
           {lToken ? (
             <>
-              <Route path="/" exact element={<Addpost />} />
-              <Route path="/AddPost" exact element={<Addpost />} />
+              <Route path="/" exact element={<Home />} />
               <Route path="/Chat" exact element={<Chat />} />
               <Route path="/MyPost" exact element={<Mypost />} />
               <Route path="/profile" exact element={<Profile />} />
-              <Route path="/AddPost/*" element={<NF />} />
+              <Route path="/comment" exact element={<CommentModel />} />
+              <Route path="/*" element={<NF />} />
               <Route path="/Chat/*" element={<NF />} />
               <Route path="/MyPost/*" element={<NF />} />
               <Route path="/profile/*" element={<NF />} />

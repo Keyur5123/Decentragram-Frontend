@@ -112,8 +112,8 @@ function Header() {
                 {token ?
                   <>
                     <Nav.Item>
-                      <LinkContainer className="text-center" to="/AddPost">
-                        <Nav.Link eventKey="link-0">AddPost</Nav.Link>
+                      <LinkContainer className="text-center" to="/">
+                        <Nav.Link eventKey="link-0">AllPost</Nav.Link>
                       </LinkContainer>
                     </Nav.Item>
                     <Nav.Item>

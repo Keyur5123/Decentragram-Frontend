@@ -12,7 +12,7 @@ export default function ChatBox(props) {
   const [inputText, setInputText] = useState("");
   var receverUsers = props.receverUsers;
   var loginUsers = props.loginUsers;
-  console.warn("receverUsers :- ",receverUsers)
+  // console.warn("receverUsers :- ",receverUsers)
   
   const [texts, setText] = useState({});
   const [textsIO, setTextIO] = useState([]);

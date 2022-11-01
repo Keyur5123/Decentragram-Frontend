@@ -1,38 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import CommentModel from './CommentModel';
-import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import ShareIcon from '@mui/icons-material/Share';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Axios from "axios";
 import Popover from '@mui/material/Popover';
 import { toast } from 'react-toastify';
-
+import Heart from "../assets/heart.webp"
 
 function Post(props, { key }) {
 
   var token = localStorage.getItem("token");
   const dbData = props.dbMypost;
-  var post_img = dbData?.postImg;
-  var profile_img = dbData?.userData?.image;
-  var img_title = dbData?.postTitle;
-  var post_caption = dbData?.postCaption;
-  var postId = dbData?._id;
-  var username = dbData?.userData?.userName;
+  // var post_img = dbData?.postImg;
+  // var profile_img = dbData?.userData?.image;
+  // var img_title = dbData?.postTitle;
+  // var post_caption = dbData?.postCaption;
+  // var postId = dbData?._id;
+  // var username = dbData?.userData?.userName;
+
+
+
+  const postObj = {
+    post_img:dbData?.postImg,
+    profile_img:dbData?.userData?.image,
+    img_title:dbData?.postTitle,
+    post_caption:dbData?.postCaption,
+    postId:dbData?._id,
+    username:dbData?.userData?.userName
+  }
 
   const [likeBtn, setLikeBtn] = useState(false);
   const [postLikeUser, serPostLikeUser] = useState([]);
@@ -46,7 +53,7 @@ function Post(props, { key }) {
 
 
   function getLikeBtnData() {
-    Axios.get(`http://localhost:5000/mypost/likePost?postid=${postId}`, {
+    Axios.get(`http://localhost:5000/mypost/likePost?postid=${postObj?.postId}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -81,7 +88,7 @@ function Post(props, { key }) {
     var likePost = Axios.post(
       "http://localhost:5000/mypost/likePost",
       {
-        id: postId,
+        id: postObj?.postId,
         like: likeValue,
       },
       {
@@ -119,12 +126,6 @@ function Post(props, { key }) {
       });
   };
 
-  const handleComment = () => (
-    // setOpenCommentBox(true)
-
-     <CommentModel setOpenCommentBox={setOpenCommentBox} status={openCommentBox} />
-  )
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -132,8 +133,8 @@ function Post(props, { key }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
 
   return (
@@ -141,7 +142,7 @@ function Post(props, { key }) {
     <Card className="mb-5">
       <CardHeader
         avatar={
-          <Avatar alt="Remy Sharp" src={`http://localhost:5000/${profile_img}`} />
+          <Avatar alt="Remy Sharp" src={`http://localhost:5000/${postObj?.profile_img}`} />
         }
         action={
           <IconButton aria-label="settings">
@@ -149,7 +150,7 @@ function Post(props, { key }) {
               <>
                 <MoreVertIcon onClick={handleClick} />
                 <Popover
-                  id={id}
+                  id={`${open} ? 'simple-popover' : undefined`}
                   open={open}
                   anchorEl={anchorEl}
                   onClose={handleClose}
@@ -166,35 +167,48 @@ function Post(props, { key }) {
             }
           </IconButton>
         }
-        title={username}
-        subheader={img_title}
+        title={postObj?.username}
+        subheader={postObj?.img_title}
       />
 
       <CardMedia
         component="img"
         height="194"
-        image={`http://localhost:5000/${post_img}`}
+        image={`http://localhost:5000/${postObj?.post_img}`}
         alt="Paella dish"
       />
 
       <CardContent className='pb-0'>
-        <Typography variant="body2" color="text.secondary">{post_caption}</Typography>
+        <Typography variant="body2" color="text.secondary">{postObj?.post_caption}</Typography>
       </CardContent>
 
       <CardActions disableSpacing>
 
         <div className='d-flex flex-column'>
-          <div>
+          <div className='d-flex'>
             <IconButton onClick={likeBtnClicked} aria-label="add to favorites">
-              {likeBtn === true ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+              {/* {likeBtn === true ? <FavoriteIcon /> : <FavoriteBorderIcon />} */}
+              {likeBtn === true ? <img src={Heart} alt="icon" height="25px" /> : <FavoriteBorderIcon />}
             </IconButton>
 
-            <IconButton onClick={handleComment} aria-label="comment" >
-              <ChatBubbleOutlineIcon />
-            </IconButton>
+            <div>
+              <IconButton onClick={() => setOpenCommentBox(!openCommentBox)} aria-label="comment" >
+                <ChatBubbleOutlineIcon />
+              </IconButton>
+
+              <CommentModel
+                setOpenCommentBox={setOpenCommentBox} 
+                status={openCommentBox} 
+                postObj={postObj}
+              />
+            </div>
+
+            <SendRoundedIcon className='mt-2' />
+
           </div>
+
           <div className='Post__Likes'>
-            <span>{postLikeUser.length === 0 ? null : `${postLikeUser.length} likes`}</span>
+            <span>{`${postLikeUser.length} likes`}</span>
           </div>
 
         </div>

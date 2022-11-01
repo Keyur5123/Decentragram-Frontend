@@ -2,17 +2,19 @@ import React, { useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Carousel from "../assets/Carousel1";
+
 function Login1(props) {
     const navigate = useNavigate();
-    const [loginInfo, setLoginInfo] = useState({ email:'', password:'' })
+    const [loginInfo, setLoginInfo] = useState({ email: '', password: '' })
 
     const handleInput = (e) => {
         const name = e.target.name;
         const value = e.target.value;
-        setLoginInfo({ ...loginInfo, [name]:value })
+        setLoginInfo({ ...loginInfo, [name]: value })
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // if(!loginInfo.email){
@@ -22,32 +24,34 @@ function Login1(props) {
         //     toast.error("password is require");
         // }
         // else{
-            const { email,password } = loginInfo;
-            await fetch('http://localhost:5000/login',{
-                method:'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email , password })
-            })
-            .then(res => res.json())
-            .then(res => {
-                if(res.error){
-                    toast.error(res.error)
-                }
-                else{
-                    localStorage.setItem("token", res.Token);
-                    navigate("/AddPost");
-                    window.location.reload();
-                }
-            }).catch(err => toast.error(err))
-        // }
-
-
-    } 
+            try {
+                const { email, password } = loginInfo;
+                await fetch('http://localhost:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email, password })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        if (res.error) {
+                            toast.error(res.error)
+                        }
+                        else {
+                            localStorage.setItem("token", res.Token);
+                            navigate("/");
+                            window.location.reload();
+                        }
+                    }).catch(err => toast.error(err))
+            } catch (error) {
+                toast.error(error)
+            }
+    }
 
     return (
         <>
+            <Carousel />
             <Container>
                 <h2 className='text-center'>Login</h2>
                 <Form onSubmit={handleSubmit}>

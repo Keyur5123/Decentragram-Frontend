@@ -33,8 +33,6 @@
  .person .user .status {
     width: 10px;
     height: 10px;
-    /* -webkit-border-radius: 100px;
-    -moz-border-radius: 100px; */
     border-radius: 100px;
     background: #e6ecf3;
     position: absolute;
@@ -58,3 +56,16 @@
   .users .person .user .status.busy {
     background: #fd7274;
   }
+
+  .Post_Comments {
+    /* display: flex; */
+    position: relative;
+    overflow-y: scroll;
+    overflow-x: auto;
+  }
+
+  .Add_Comment {
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+}

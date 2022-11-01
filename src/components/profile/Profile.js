@@ -123,13 +123,13 @@ function Profile() {
               onlyCountries={['in']}
               country={'in'}
               value={phoneNumber}
-              className="mb-4 mt-4"
+              className="mb-1 mt-4"
               onChange={phone => setPhoneNumber('+' + phone)}
             />
-            <div className="d-flex">
+            {/* <div className="d-flex">
               <DatePicker className="mb-4" onChange={setBirthDate} />
               {birthDate && <p className="ml-3">The Birthdate is :- {birthDate?.split(' ')?.slice(1, 4)?.join(' ')}</p>}
-            </div>
+            </div> */}
             <br />
             <Button variant="primary" type="submit">
               Submit
