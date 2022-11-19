@@ -23,13 +23,17 @@ export default function ChatBox(props) {
   //   }
   // }, [receverMessageObj])
 
+  console.warn("receverUsers User :- ",receverUsers);
   useEffect(() => {
     try {
+
+      
       var textObjIO = textsIO?.map((text, index) => {
-        if (loginUsers?._id === text.senderId && receverUsers?._id === text.receverId) {
+        // console.warn("textsIO User :- ",textsIO);
+        if (loginUsers?._id === text?.senderId && receverUsers?._id === text?.receverId) {
           return <SenderText key={index} SenderText={text} senderData={loginUsers} />
         }
-        if (loginUsers?._id === text.receverId && receverUsers?._id === text.senderId) {
+        if (loginUsers?._id === text.receverId && receverUsers?._id === text?.senderId) {
           return <ReceverText
             key={index}
             users={props.users}
@@ -88,8 +92,8 @@ export default function ChatBox(props) {
     })
       .then((res) => console.log("res :- ", res))
       .catch(err => console.log("error occuer :- ", err))
-
-    setInputText("");
+      setInputText("");
+      // document.location.reload();   // textIo object set kari ne send karvama problem ave 6 because one-to-many conversation automatically thay jay 6
   }
 
   try {

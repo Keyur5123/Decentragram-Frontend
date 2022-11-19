@@ -73,14 +73,14 @@ function NewChat(props) {
 
     const sendMessage = (message) => {
         console.warn("Send Message from Chat.js :- ",message)
-        socket.emit("sendMessage", message)
-        socket.on("receivMessage",(T) => console.warn("text :- ",T))
+        // socket.current.emit("sendMessage", message)
+        // socket.on("receivMessage",(T) => console.warn("text :- ",T))
     }
 
     return (
-        <div>
+        <div className='mt-3 ChatScreen'>
             <Container>
-                <h2 className='text-center'>CHAT</h2>
+                {/* <h2>CHAT</h2> */}
                 <Row>
                     <Col xs={12} md={4}>
                         <Search users={allUsers} searchedUser={searchedUser} />

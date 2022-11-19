@@ -13,7 +13,7 @@ function User({ curr_user, selectUser, activeUser }) {
                         <div className="user">
                             <Card.Img className='img-fluid rounded-circle' src={`http://localhost:5000/${curr_user.image}`} alt="Profile Image" style={{ width: "40px", height: "40px" }} />
                             <span
-                                className={active_label?.length != 0 ? `status online` : null}
+                                className={(active_label && active_label?.length != 0) ? `status online` : null}
                             ></span>
                         </div>
                         <Card.Text className='ml-4'>{curr_user.userName}</Card.Text>
